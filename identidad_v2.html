@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMOS | Showcase de Identidad Visual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --command-blue: #170774;
+            --cosmos-cyan: #00FFC3;
+            --deep-space: #050510;
+            --stellar-white: #F4F5F8;
+            --nebula-purple: #6D28D9;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--stellar-white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        .glass {
+            background: rgba(23, 7, 116, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bg-command { background-color: var(--command-blue); }
+        .text-cyan { color: var(--cosmos-cyan); }
+        .border-cyan { border-color: var(--cosmos-cyan); }
+        
+        .tab-active {
+            background-color: var(--command-blue);
+            color: white;
+            box-shadow: 0 4px 20px rgba(23, 7, 116, 0.4);
+        }
+
+        .view-content { display: none; }
+        .view-content.active { display: block; animation: fadeIn 0.6s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-bg {
+            background-image: radial-gradient(circle, rgba(0, 255, 195, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .glow-cyan { box-shadow: 0 0 20px rgba(0, 255, 195, 0.2); }
+    </style>
+</head>
+<body class="grid-bg">
+
+    <!-- Navegación Superior -->
+    <nav class="sticky top-0 z-50 px-6 py-4 flex justify-between items-center glass border-b border-white/5 bg-[#050510]/80">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-command rounded-lg flex items-center justify-center border border-white/10 shadow-[0_0_15px_rgba(23,7,116,0.4)]">
+                <i data-lucide="rocket" class="text-cyan w-6 h-6"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-xl font-black tracking-tighter uppercase leading-none">Cosmos</span>
+                <span class="text-[8px] font-mono text-cyan tracking-[0.3em] uppercase">Protocolo 170774</span>
+            </div>
+        </div>
+
+        <div class="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/10">
+            <button onclick="switchView('brand')" id="btn-brand" class="tab-btn px-5 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded-lg tab-active">Brand Board</button>
+            <button onclick="switchView('social')" id="btn-social" class="tab-btn px-5 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded-lg text-gray-500 hover:text-white">Social Mockup</button>
+            <button onclick="switchView('dashboard')" id="btn-dashboard" class="tab-btn px-5 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded-lg text-gray-500 hover:text-white">Dashboard UI</button>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-8">
+
+        <!-- SECCIÓN 1: BRAND BOARD -->
+        <div id="view-brand" class="view-content active space-y-16">
+            <header class="border-l-4 border-[#170774] pl-6 py-2">
+                <h1 class="text-5xl font-black mb-2 tracking-tighter uppercase">Soberanía Visual</h1>
+                <p class="text-cyan font-mono text-xs uppercase tracking-widest">Manual de Identidad v2.0 // Deep Command Blue</p>
+            </header>
+
+            <!-- Paleta de Colores -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <div class="group">
+                    <div class="h-48 rounded-2xl mb-4 bg-[#170774] border border-white/10 shadow-2xl flex items-end p-4">
+                        <span class="font-mono text-[10px] bg-black/40 px-2 py-1 rounded">#170774</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Command Blue</h3>
+                    <p class="text-[10px] text-gray-500 uppercase mt-1">Protagonista / Autoridad</p>
+                </div>
+                <div class="group">
+                    <div class="h-48 rounded-2xl mb-4 bg-[#050510] border border-white/10 shadow-2xl flex items-end p-4">
+                        <span class="font-mono text-[10px] bg-black/40 px-2 py-1 rounded">#050510</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Deep Space</h3>
+                    <p class="text-[10px] text-gray-500 uppercase mt-1">Fondo / Inmersión</p>
+                </div>
+                <div class="group">
+                    <div class="h-48 rounded-2xl mb-4 bg-[#00FFC3] border border-white/10 shadow-2xl flex items-end p-4">
+                        <span class="font-mono text-[10px] bg-black/40 px-2 py-1 rounded text-black font-bold">#00FFC3</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Cosmos Cyan</h3>
+                    <p class="text-[10px] text-gray-500 uppercase mt-1">Precisión / Energía</p>
+                </div>
+                <div class="group">
+                    <div class="h-48 rounded-2xl mb-4 bg-[#6D28D9] border border-white/10 shadow-2xl flex items-end p-4">
+                        <span class="font-mono text-[10px] bg-black/40 px-2 py-1 rounded">#6D28D9</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Nebula Purple</h3>
+                    <p class="text-[10px] text-gray-500 uppercase mt-1">IA / Predicción</p>
+                </div>
+                <div class="group">
+                    <div class="h-48 rounded-2xl mb-4 bg-[#F4F5F8] border border-white/10 shadow-2xl flex items-end p-4">
+                        <span class="font-mono text-[10px] bg-black/40 px-2 py-1 rounded text-black font-bold">#F4F5F8</span>
+                    </div>
+                    <h3 class="font-bold text-sm">Stellar White</h3>
+                    <p class="text-[10px] text-gray-500 uppercase mt-1">Claridad / Texto</p>
+                </div>
+            </div>
+
+            <!-- Tipografía y Aplicación -->
+            <div class="bg-gradient-to-br from-[#170774] to-[#050510] border border-white/10 rounded-3xl p-12 grid md:grid-cols-2 gap-12 items-center shadow-2xl">
+                <div class="space-y-6">
+                    <span class="text-[10px] font-mono text-cyan uppercase tracking-[0.4em]">Arquitectura Tipográfica</span>
+                    <h2 class="text-6xl font-black leading-none tracking-tighter uppercase">Ingeniería <br/>Sin Errores.</h2>
+                    <p class="text-white/60 text-lg">La robustez del azul profundo se encuentra con la ligereza de la tipografía moderna, creando un entorno de comando infalible.</p>
+                </div>
+                <div class="bg-black/40 p-8 rounded-2xl border border-white/10 font-mono space-y-4">
+                    <div class="flex items-center gap-3 text-cyan">
+                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                        <span class="text-xs uppercase tracking-widest">Stream_Analytics_Active</span>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-[10px] text-white/40">&gt; Iniciando protocolo de margen...</p>
+                        <p class="text-xs text-white">&gt; RENTABILIDAD_SISTEMA: <span class="text-cyan">94.8%</span></p>
+                        <p class="text-xs text-white">&gt; ESTADO_GRAVEDAD: <span class="text-orange-400 text-[10px] uppercase font-bold">Alta Volatilidad</span></p>
+                    </div>
+                    <div class="pt-4 border-t border-white/5 flex justify-between">
+                        <span class="text-[9px] text-gray-500">LAT: -34.6037</span>
+                        <span class="text-[9px] text-gray-500">LON: -58.3816</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: SOCIAL MOCKUP -->
+        <div id="view-social" class="view-content">
+            <div class="flex flex-col items-center">
+                <header class="mb-12 text-center">
+                    <h2 class="text-3xl font-black uppercase tracking-tighter">Comando en Redes</h2>
+                    <p class="text-gray-500 font-mono text-xs uppercase tracking-widest mt-2">Visualización de Alta Densidad para Instagram</p>
+                </header>
+
+                <div class="w-full max-w-[400px] bg-[#170774] p-1 rounded-[3.5rem] shadow-[0_0_80px_rgba(23,7,116,0.3)]">
+                    <div class="bg-[#050510] h-full rounded-[3.4rem] overflow-hidden flex flex-col border border-white/10">
+                        <!-- Header IG -->
+                        <div class="p-5 flex items-center justify-between border-b border-white/5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-[#170774] border border-cyan/30 flex items-center justify-center">
+                                    <i data-lucide="rocket" class="w-4 h-4 text-cyan"></i>
+                                </div>
+                                <span class="text-xs font-bold uppercase tracking-widest">cosmos.mision</span>
+                            </div>
+                            <i data-lucide="more-horizontal" class="text-gray-600 w-5 h-5"></i>
+                        </div>
+                        
+                        <!-- Visual del Post -->
+                        <div class="relative aspect-square bg-[#170774] flex items-center justify-center overflow-hidden">
+                            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#00FFC3 1px, transparent 1px); background-size: 20px 20px;"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#050510] to-transparent"></div>
+                            
+                            <div class="relative z-10 text-center p-12 border-y border-cyan/30 w-full bg-[#170774]/40 backdrop-blur-sm">
+                                <h3 class="text-4xl font-black leading-none tracking-tighter italic text-white">NUESTRA <br/>MISIÓN ES <br/>TU MARGEN.</h3>
+                                <div class="mt-6 flex items-center justify-center gap-4">
+                                    <div class="h-[1px] w-8 bg-cyan/50"></div>
+                                    <i data-lucide="shield-check" class="text-cyan w-6 h-6"></i>
+                                    <div class="h-[1px] w-8 bg-cyan/50"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Barra de interacción -->
+                        <div class="p-6 space-y-4">
+                            <div class="flex gap-5">
+                                <i data-lucide="zap" class="text-cyan w-6 h-6 cursor-pointer"></i>
+                                <i data-lucide="message-circle" class="text-white/40 w-6 h-6"></i>
+                                <i data-lucide="send" class="text-white/40 w-6 h-6"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[11px] leading-relaxed">
+                                    <span class="font-bold mr-2 tracking-widest">COSMOS.MISION</span>
+                                    ¿Tu restaurante sobrevive o comanda? La ingeniería de Cosmos protege cada centavo de tu operación.
+                                </p>
+                                <p class="text-[10px] text-cyan font-mono uppercase mt-2">#ComandoGastro #DeepBlue #Precision</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: DASHBOARD UI -->
+        <div id="view-dashboard" class="view-content">
+            <header class="mb-10 flex flex-col md:flex-row justify-between items-center bg-[#170774]/10 p-8 rounded-3xl border border-[#170774]/20">
+                <div class="mb-4 md:mb-0">
+                    <h2 class="text-3xl font-black tracking-tighter uppercase">Consola Principal</h2>
+                    <p class="text-cyan font-mono text-[10px] uppercase mt-1 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-cyan animate-pulse"></span> Sistema Online // Palermo Soho Station
+                    </p>
+                </div>
+                <div class="flex gap-6 items-center">
+                    <div class="text-right">
+                        <span class="text-[9px] font-mono text-gray-500 uppercase block">Fase Económica</span>
+                        <span class="text-sm font-bold text-orange-400 tracking-widest uppercase">Alta Volatilidad</span>
+                    </div>
+                    <div class="h-10 w-[1px] bg-white/10"></div>
+                    <button class="w-12 h-12 rounded-xl bg-[#170774] border border-white/20 flex items-center justify-center hover:bg-[#1a0c8a] transition-all">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Métricas Críticas -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#170774]/50 transition-all group">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Velocidad Escape</span>
+                        <i data-lucide="trending-up" class="text-cyan w-4 h-4"></i>
+                    </div>
+                    <div class="text-3xl font-black text-cyan tracking-tighter">14.8%</div>
+                    <div class="mt-4 h-[2px] bg-white/5 w-full"><div class="h-full bg-[#170774] w-2/3"></div></div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#170774]/50 transition-all group">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Flujo Oxígeno</span>
+                        <i data-lucide="activity" class="text-white/40 w-4 h-4"></i>
+                    </div>
+                    <div class="text-3xl font-black text-white tracking-tighter">$12.4M</div>
+                    <div class="mt-4 h-[2px] bg-white/5 w-full"><div class="h-full bg-[#170774] w-full"></div></div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 border-orange-500/30 group">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">Carga Almacén</span>
+                        <i data-lucide="alert-triangle" class="text-orange-500 w-4 h-4"></i>
+                    </div>
+                    <div class="text-3xl font-black text-orange-500 tracking-tighter">42%</div>
+                    <div class="mt-4 h-[2px] bg-white/5 w-full"><div class="h-full bg-orange-500 w-1/2"></div></div>
+                </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#170774]/50 transition-all group">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">IA Copilot</span>
+                        <i data-lucide="cpu" class="text-[#6D28D9] w-4 h-4"></i>
+                    </div>
+                    <div class="text-3xl font-black text-[#6D28D9] tracking-tighter">READY</div>
+                    <div class="mt-4 h-[2px] bg-white/5 w-full"><div class="h-full bg-[#6D28D9] w-full animate-pulse"></div></div>
+                </div>
+            </div>
+
+            <!-- Gráfico y Panel de Control -->
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 glass border border-white/10 rounded-[2.5rem] p-10 relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-12">
+                        <h3 class="text-xs font-mono uppercase tracking-[0.2em] text-cyan">Trayectoria de Reposición Semanal</h3>
+                        <i data-lucide="layers" class="text-white/20 w-5 h-5"></i>
+                    </div>
+                    
+                    <div class="h-64 flex items-end justify-between gap-3">
+                        <!-- Simulación de Barras -->
+                        <div class="flex-1 bg-[#170774] rounded-t-lg transition-all hover:bg-cyan" style="height: 30%;"></div>
+                        <div class="flex-1 bg-[#170774] rounded-t-lg transition-all hover:bg-cyan" style="height: 55%;"></div>
+                        <div class="flex-1 bg-[#170774] rounded-t-lg transition-all hover:bg-cyan" style="height: 40%;"></div>
+                        <div class="flex-1 bg-[#170774] rounded-t-lg transition-all hover:bg-cyan" style="height: 75%;"></div>
+                        <div class="flex-1 bg-[#170774] rounded-t-lg transition-all hover:bg-cyan" style="height: 60%;"></div>
+                        <div class="flex-1 bg-[#170774] rounded-t-lg transition-all hover:bg-cyan" style="height: 90%;"></div>
+                        <div class="flex-1 bg-cyan rounded-t-lg shadow-[0_0_20px_rgba(0,255,195,0.4)]" style="height: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-6">
+                    <div class="bg-gradient-to-b from-[#170774] to-black border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative">
+                        <h3 class="text-xs font-mono uppercase text-cyan mb-6 flex items-center gap-2">
+                            <i data-lucide="brain" class="w-4 h-4"></i> Inteligencia de Misión
+                        </h3>
+                        <div class="bg-black/40 p-5 rounded-2xl border border-white/5 mb-8">
+                            <p class="text-sm leading-relaxed text-gray-300 italic">
+                                "Alerta: El precio del <span class="text-white font-bold tracking-widest">CAFÉ</span> ha subido un 12%. Recomiendo ajuste preventivo en carta digital."
+                            </p>
+                        </div>
+                        <button class="w-full bg-cyan text-[#170774] py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.03] transition-all glow-cyan">
+                            Ejecutar Protocolo
+                        </button>
+                    </div>
+
+                    <div class="bg-white/5 border border-white/5 rounded-2xl p-6 font-mono text-[9px] text-gray-500 space-y-2">
+                        <p class="text-cyan/60">SYSTEM_SYNC: OK</p>
+                        <p>DATA_STREAM: Palermo_Station_12</p>
+                        <p class="text-orange-400">WARN: ALTA_PRESIÓN_MERCADO</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="p-16 border-t border-white/5 text-center mt-20 bg-black/40">
+        <div class="flex justify-center gap-8 mb-8 opacity-30">
+            <i data-lucide="globe" class="w-5 h-5"></i>
+            <i data-lucide="shield" class="w-5 h-5"></i>
+            <i data-lucide="zap" class="w-5 h-5"></i>
+        </div>
+        <p class="text-[10px] font-mono text-gray-600 tracking-[0.5em] uppercase leading-relaxed">
+            Cosmos Systems Engineering <br/>
+            Protocolo de Identidad 170774 // Argentina 2026
+        </p>
+    </footer>
+
+    <script>
+        // Inicializar iconos
+        lucide.createIcons();
+
+        // Función para cambiar vistas (Tabs)
+        function switchView(viewId) {
+            // Ocultar todas las vistas
+            document.querySelectorAll('.view-content').forEach(view => {
+                view.classList.remove('active');
+            });
+
+            // Mostrar la seleccionada
+            document.getElementById('view-' + viewId).classList.add('active');
+
+            // Actualizar botones
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById('btn-' + viewId).classList.add('tab-active');
+            document.getElementById('btn-' + viewId).classList.remove('text-gray-500');
+
+            // Volver arriba
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
