@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMOS | Propuesta Integral de Identidad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --command-blue: #170774;
+            --cosmos-cyan: #00FFC3;
+            --deep-space: #050510;
+            --stellar-white: #F4F5F8;
+            --nebula-purple: #6D28D9;
+            --plasma-orange: #FF8928;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--stellar-white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        .glass {
+            background: rgba(23, 7, 116, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bg-command { background-color: var(--command-blue); }
+        .text-cyan { color: var(--cosmos-cyan); }
+        .text-purple { color: var(--nebula-purple); }
+        .text-orange { color: var(--plasma-orange); }
+        
+        .tab-active {
+            background-color: var(--command-blue);
+            color: white;
+            box-shadow: 0 10px 40px rgba(23, 7, 116, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .view-content { display: none; }
+        .view-content.active { display: block; animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(23, 7, 116, 0.15) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(23, 7, 116, 0.15) 1.5px, transparent 1.5px);
+            background-size: 60px 60px;
+        }
+
+        .glow-cyan { filter: drop-shadow(0 0 12px rgba(0, 255, 195, 0.5)); }
+        
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--deep-space); }
+        ::-webkit-scrollbar-thumb { background: var(--command-blue); border-radius: 10px; }
+
+        .hover-lift { transition: transform 0.4s ease, border-color 0.4s ease; }
+        .hover-lift:hover { transform: translateY(-8px); border-color: var(--cosmos-cyan); }
+    </style>
+</head>
+<body class="grid-bg">
+
+    <!-- Navegación Unificada -->
+    <nav class="sticky top-0 z-50 px-10 py-6 flex justify-between items-center glass border-b border-white/10 bg-[#050510]/95">
+        <div class="flex items-center gap-5">
+            <div class="w-14 h-14 bg-command rounded-2xl flex items-center justify-center border border-white/20 shadow-[0_0_30px_rgba(23,7,116,0.5)] transition-all hover:rotate-12">
+                <i data-lucide="navigation" class="text-cyan w-8 h-8 glow-cyan"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-3xl font-black tracking-tighter uppercase leading-none">Cosmos</span>
+                <span class="text-[10px] font-mono text-cyan tracking-[0.5em] uppercase opacity-70 italic">Control de Misión Gastronómica</span>
+            </div>
+        </div>
+
+        <div class="hidden xl:flex gap-3 bg-black/50 p-2 rounded-2xl border border-white/10">
+            <button onclick="switchView('manifesto')" id="btn-manifesto" class="tab-btn px-8 py-3 text-[11px] font-bold uppercase tracking-[0.2em] transition-all rounded-xl tab-active">Manifiesto Core</button>
+            <button onclick="switchView('pillars')" id="btn-pillars" class="tab-btn px-8 py-3 text-[11px] font-bold uppercase tracking-[0.2em] transition-all rounded-xl text-gray-500 hover:text-white">Ingeniería & Pilares</button>
+            <button onclick="switchView('visual')" id="btn-visual" class="tab-btn px-8 py-3 text-[11px] font-bold uppercase tracking-[0.2em] transition-all rounded-xl text-gray-500 hover:text-white">Estética de Comando</button>
+            <button onclick="switchView('console')" id="btn-console" class="tab-btn px-8 py-3 text-[11px] font-bold uppercase tracking-[0.2em] transition-all rounded-xl text-gray-500 hover:text-white">Consola Operativa</button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-10 lg:p-16">
+
+        <!-- SECCIÓN 1: MANIFIESTO CORE (UNIFICADO) -->
+        <div id="view-manifesto" class="view-content active space-y-24">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <header class="space-y-10">
+                    <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-cyan/10 border border-cyan/30">
+                        <i data-lucide="activity" class="w-4 h-4 text-cyan animate-pulse"></i>
+                        <span class="text-[11px] font-mono text-cyan uppercase tracking-[0.3em]">Protocolo de Resiliencia: Activo</span>
+                    </div>
+                    <h1 class="text-7xl lg:text-9xl font-black tracking-tighter uppercase leading-[0.85]">Comanda <br/>tu <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-[#170774]">Soberanía</span>.</h1>
+                    <p class="text-2xl text-white/50 leading-relaxed font-light">
+                        En un mercado de <span class="text-white font-bold italic">gravedad extrema</span>, la gestión administrativa es insuficiente. 
+                        Cosmos dota al empresario de un <span class="text-white font-bold">instrumento de navegación</span> capaz de neutralizar la inflación mediante precisión aeroespacial.
+                    </p>
+                    <div class="flex flex-wrap gap-5">
+                        <div class="px-8 py-4 bg-command rounded-2xl border border-white/10 shadow-2xl flex flex-col">
+                            <span class="text-[9px] font-mono text-cyan/60 uppercase mb-1">Misión Principal</span>
+                            <span class="text-lg font-black uppercase tracking-widest">Protección de Margen</span>
+                        </div>
+                        <div class="px-8 py-4 glass rounded-2xl flex flex-col">
+                            <span class="text-[9px] font-mono text-gray-500 uppercase mb-1">Entorno Operativo</span>
+                            <span class="text-lg font-black uppercase tracking-widest text-orange-400">Alta Volatilidad</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="relative">
+                    <div class="absolute inset-0 bg-command/30 blur-[150px] rounded-full"></div>
+                    <div class="relative glass rounded-[4rem] p-16 border-white/20 shadow-3xl overflow-hidden group">
+                        <div class="flex justify-between items-center mb-12">
+                            <h3 class="text-xs font-mono text-cyan uppercase tracking-[0.5em]">Glosario de Ingeniería</h3>
+                            <i data-lucide="layers" class="text-gray-700 w-5 h-5"></i>
+                        </div>
+                        <div class="space-y-10">
+                            <div class="flex items-center justify-between group/line">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-gray-500 line-through uppercase font-mono mb-1">Rentabilidad</span>
+                                    <span class="text-white font-black uppercase text-lg tracking-[0.3em]">Velocidad de Escape</span>
+                                </div>
+                                <i data-lucide="arrow-right-circle" class="text-cyan w-6 h-6 group-hover/line:translate-x-3 transition-transform"></i>
+                            </div>
+                            <div class="flex items-center justify-between group/line">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-gray-500 line-through uppercase font-mono mb-1">Flujo de Caja</span>
+                                    <span class="text-white font-black uppercase text-lg tracking-[0.3em]">Propulsión</span>
+                                </div>
+                                <i data-lucide="zap" class="text-cyan w-6 h-6 group-hover/line:scale-125 transition-transform"></i>
+                            </div>
+                            <div class="flex items-center justify-between group/line">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-gray-500 line-through uppercase font-mono mb-1">Reportes</span>
+                                    <span class="text-white font-black uppercase text-lg tracking-[0.3em]">Telemetría</span>
+                                </div>
+                                <i data-lucide="radar" class="text-cyan w-6 h-6 group-hover/line:rotate-45 transition-transform"></i>
+                            </div>
+                        </div>
+                        <p class="mt-16 text-sm italic text-white/40 border-t border-white/10 pt-8">
+                            "La precisión es nuestra moneda. Cosmos transforma la 'ayuda' en 'comando' total de la operación."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: PILARES & INGENIERÍA (APARTADO IV COMPLETO) -->
+        <div id="view-pillars" class="view-content space-y-20">
+            <header class="text-center space-y-4 max-w-3xl mx-auto">
+                <h2 class="text-5xl font-black uppercase tracking-tighter">Pilares del Comando Gastronómico</h2>
+                <p class="text-cyan font-mono text-xs uppercase tracking-[0.4em] opacity-60">Protocolos de Estándar Industrial</p>
+            </header>
+
+            <div class="grid lg:grid-cols-3 gap-12">
+                <!-- Pilar 1: Grado Industrial -->
+                <div class="hover-lift glass p-12 rounded-[3.5rem] space-y-8 bg-command/5 border-white/10">
+                    <div class="w-20 h-20 bg-command rounded-3xl flex items-center justify-center border border-white/20 shadow-inner">
+                        <i data-lucide="settings-2" class="text-cyan w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-3xl font-black uppercase tracking-tight">Ingeniería de Grado Industrial</h3>
+                    <p class="text-white/50 leading-relaxed">
+                        No somos "fáciles de usar", somos <span class="text-white font-bold">infalibles en la ejecución</span>. Construido bajo estándares de redundancia crítica donde el margen de error admitido es cero.
+                    </p>
+                    <div class="pt-6 border-t border-white/5 space-y-3 font-mono text-[10px] text-cyan uppercase">
+                        <div class="flex items-center gap-3"><i data-lucide="check" class="w-3 h-3"></i> Redundancia de Datos</div>
+                        <div class="flex items-center gap-3"><i data-lucide="check" class="w-3 h-3"></i> Cero Tolerancia al Error</div>
+                    </div>
+                </div>
+
+                <!-- Pilar 2: Soberanía de Datos -->
+                <div class="hover-lift glass p-12 rounded-[3.5rem] space-y-8 bg-command/5 border-white/10 relative overflow-hidden">
+                    <div class="w-20 h-20 bg-command rounded-3xl flex items-center justify-center border border-white/20">
+                        <i data-lucide="shield" class="text-purple w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-3xl font-black uppercase tracking-tight">Soberanía de Datos</h3>
+                    <p class="text-white/50 leading-relaxed">
+                        Analíticas que <span class="text-white font-bold">filtran el ruido</span> del mercado volátil para revelar la verdad operativa real. Una única fuente de verdad ante la incertidumbre inflacionaria.
+                    </p>
+                    <div class="pt-6 border-t border-white/5 space-y-3 font-mono text-[10px] text-purple uppercase">
+                        <div class="flex items-center gap-3"><i data-lucide="check" class="w-3 h-3"></i> Verdad Absoluta Algorítmica</div>
+                        <div class="flex items-center gap-3"><i data-lucide="check" class="w-3 h-3"></i> Filtro de Ruido Macroeconómico</div>
+                    </div>
+                </div>
+
+                <!-- Pilar 3: Resiliencia Algorítmica -->
+                <div class="hover-lift glass p-12 rounded-[3.5rem] space-y-8 bg-command/5 border-white/10">
+                    <div class="w-20 h-20 bg-command rounded-3xl flex items-center justify-center border border-white/20">
+                        <i data-lucide="wind" class="text-orange w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-3xl font-black uppercase tracking-tight">Resiliencia Algorítmica</h3>
+                    <p class="text-white/50 leading-relaxed">
+                        Diseñados para <span class="text-white font-bold italic">condiciones extremas</span>. Validamos la eficacia de los procesos como si fueran entornos de alta presión atmosférica.
+                    </p>
+                    <div class="pt-6 border-t border-white/5 space-y-3 font-mono text-[10px] text-orange uppercase">
+                        <div class="flex items-center gap-3"><i data-lucide="check" class="w-3 h-3"></i> Blindaje Ante Inflación</div>
+                        <div class="flex items-center gap-3"><i data-lucide="check" class="w-3 h-3"></i> Estabilidad en la Crisis</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard de Contexto Macroeconómico -->
+            <div class="bg-black/40 border border-white/10 rounded-[4rem] p-16 relative overflow-hidden">
+                <div class="absolute inset-0 bg-command/5 pointer-events-none"></div>
+                <div class="grid md:grid-cols-4 gap-12 text-center relative z-10">
+                    <div class="space-y-2">
+                        <span class="text-5xl font-black text-cyan">31.5%</span>
+                        <p class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Gravedad (Inflación)</p>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-5xl font-black text-white">45.0%</span>
+                        <p class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Inflación Sectorial</p>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-5xl font-black text-orange">10%</span>
+                        <p class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Desperdicio Invisible</p>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-5xl font-black text-purple">0.0</span>
+                        <p class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Margen de Error</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: ESTÉTICA DE COMANDO (DISEÑO & SOCIAL) -->
+        <div id="view-visual" class="view-content space-y-20">
+            <header class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-5xl font-black uppercase tracking-tighter">Estética de Grado Aeroespacial</h2>
+                    <p class="text-xl text-white/50 leading-relaxed">
+                        La comunicación no es publicitaria; es una <span class="text-white font-bold">demostración de competencia técnica</span>. 
+                        Utilizamos el <span class="text-cyan">Cinematic Dark Mode</span> para proyectar autoridad, lujo silencioso y precisión financiera.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 font-mono text-[10px] uppercase">
+                    <div class="p-4 glass rounded-xl border-cyan/20 flex flex-col items-center justify-center text-cyan">
+                        <i data-lucide="sun" class="mb-2"></i> Bioluminiscencia
+                    </div>
+                    <div class="p-4 glass rounded-xl border-white/10 flex flex-col items-center justify-center">
+                        <i data-lucide="layers" class="mb-2"></i> Glassmorphism
+                    </div>
+                    <div class="p-4 glass rounded-xl border-white/10 flex flex-col items-center justify-center">
+                        <i data-lucide="monitor" class="mb-2"></i> Dark Mode Core
+                    </div>
+                    <div class="p-4 glass rounded-xl border-command/40 flex flex-col items-center justify-center text-[#170774]">
+                        <i data-lucide="shield" class="mb-2"></i> #170774 Protagonist
+                    </div>
+                </div>
+            </header>
+
+            <!-- Instagram Mockup Unificado -->
+            <div class="flex justify-center">
+                <div class="w-[380px] bg-command p-1.5 rounded-[4rem] shadow-[0_0_120px_rgba(23,7,116,0.35)]">
+                    <div class="bg-[#050510] h-full rounded-[3.9rem] overflow-hidden flex flex-col border border-white/10">
+                        <div class="p-6 flex items-center justify-between border-b border-white/5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-[#170774] border border-cyan/30 flex items-center justify-center">
+                                    <i data-lucide="rocket" class="w-5 h-5 text-cyan"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-[11px] font-bold uppercase tracking-widest">cosmos_mision</span>
+                                    <span class="text-[8px] font-mono text-cyan/60 uppercase">Efectividad: 98.4%</span>
+                                </div>
+                            </div>
+                            <i data-lucide="more-horizontal" class="text-gray-700"></i>
+                        </div>
+
+                        <div class="relative aspect-square bg-[#170774] flex flex-col items-center justify-center p-12 text-center group">
+                            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(var(--cosmos-cyan) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                            
+                            <div class="relative z-10 space-y-8 py-10 border-y border-cyan/30 w-full bg-[#170774]/50 backdrop-blur-md">
+                                <h3 class="text-5xl font-black leading-none italic uppercase tracking-tighter text-white">REPOSICIÓN <br/>NO ES <br/><span class="text-cyan">PÉRDIDA.</span></h3>
+                                <p class="text-[9px] font-mono text-cyan uppercase tracking-[0.5em]">Es Telemetría Estratégica</p>
+                            </div>
+                        </div>
+
+                        <div class="p-8 space-y-6">
+                            <div class="flex gap-6">
+                                <i data-lucide="heart" class="text-cyan w-6 h-6 animate-pulse"></i>
+                                <i data-lucide="message-circle" class="text-white/30 w-6 h-6"></i>
+                                <i data-lucide="send" class="text-white/30 w-6 h-6"></i>
+                            </div>
+                            <div class="space-y-3">
+                                <p class="text-xs leading-relaxed">
+                                    <span class="font-bold mr-2 text-white uppercase tracking-widest">COSMOS_MISION</span>
+                                    Neutraliza la gravedad de la inflación. Nuestra <span class="text-cyan">IA Agentic</span> recalibra tu menú en tiempo real.
+                                </p>
+                                <p class="text-[10px] text-gray-600 font-mono uppercase tracking-tighter">#DeepBlueEngineering #CommandGastro #MissionControl</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: CONSOLA OPERATIVA (DASHBOARD & IA) -->
+        <div id="view-console" class="view-content space-y-16">
+            <header class="bg-command/15 p-12 rounded-[4rem] border border-command/30 flex flex-col lg:flex-row justify-between items-center gap-10">
+                <div class="space-y-3">
+                    <h2 class="text-4xl font-black uppercase tracking-tighter">Consola de Misión v2.0</h2>
+                    <p class="text-cyan font-mono text-xs uppercase tracking-widest flex items-center gap-3">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan"></span>
+                        </span>
+                        Sistema Online // Palermo Soho Station // Latencia: 3ms
+                    </p>
+                </div>
+                <div class="flex gap-6 items-center">
+                    <div class="px-8 py-3 glass rounded-2xl text-right">
+                        <span class="text-[9px] font-mono text-gray-500 uppercase block mb-1">Carga Algorítmica</span>
+                        <span class="text-lg font-black text-white tracking-[0.2em] uppercase italic">Nominal</span>
+                    </div>
+                    <button class="w-16 h-16 rounded-3xl bg-command border border-white/20 flex items-center justify-center hover:bg-cyan hover:text-command transition-all group shadow-2xl">
+                        <i data-lucide="cpu" class="w-7 h-7 group-hover:rotate-180 transition-transform duration-700"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Instrumentos de Navegación -->
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Instrumento 1: Velocidad de Escape -->
+                <div class="glass p-12 rounded-[3.5rem] space-y-10 relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 opacity-5 group-hover:rotate-12 transition-transform">
+                        <i data-lucide="trending-up" class="w-64 h-64"></i>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-xs font-mono text-cyan uppercase tracking-[0.4em]">Propulsión de Margen</h4>
+                        <span class="text-[9px] font-mono bg-cyan/10 text-cyan px-3 py-1 rounded-full uppercase">Sincronizado</span>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-4xl font-black italic tracking-tighter uppercase leading-none">Velocidad de Escape</h3>
+                        <p class="text-[10px] text-gray-500 font-mono uppercase tracking-[0.3em]">(Relación Venta vs. Reposición)</p>
+                    </div>
+                    <div class="h-24 flex items-end gap-3 px-2">
+                        <div class="flex-1 bg-command/30 rounded-t-lg h-[40%]"></div>
+                        <div class="flex-1 bg-command/30 rounded-t-lg h-[60%]"></div>
+                        <div class="flex-1 bg-command/30 rounded-t-lg h-[55%]"></div>
+                        <div class="flex-1 bg-cyan rounded-t-lg h-[90%] shadow-[0_0_20px_rgba(0,255,195,0.3)]"></div>
+                        <div class="flex-1 bg-cyan rounded-t-lg h-[100%]"></div>
+                    </div>
+                </div>
+
+                <!-- Instrumento 2: Flujo de Oxígeno -->
+                <div class="glass p-12 rounded-[3.5rem] space-y-10 relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 opacity-5 group-hover:scale-125 transition-transform">
+                        <i data-lucide="droplet" class="w-64 h-64"></i>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-xs font-mono text-orange uppercase tracking-[0.4em]">Suministros Críticos</h4>
+                        <span class="text-[9px] font-mono bg-orange/10 text-orange px-3 py-1 rounded-full uppercase">Alerta_Baja</span>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-4xl font-black italic tracking-tighter uppercase leading-none">Flujo de Oxígeno</h3>
+                        <p class="text-[10px] text-gray-500 font-mono uppercase tracking-[0.3em]">(Proyección Cash Flow 30d)</p>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="text-5xl font-black text-orange">$14.2M</div>
+                        <div class="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-orange w-1/3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal de Verdad Absoluta (Soberanía de Datos) -->
+            <div class="bg-black/60 border border-white/10 rounded-[2.5rem] p-10 font-mono">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-cyan animate-pulse"></div>
+                        <span class="text-xs text-cyan uppercase tracking-widest">Soberanía_de_Datos_Stream</span>
+                    </div>
+                    <span class="text-[10px] text-gray-600 uppercase">Verdad Operativa 100%</span>
+                </div>
+                <div class="space-y-3 text-xs leading-relaxed opacity-60">
+                    <p class="text-white/40">[17:15] FILTRANDO_RUIDO: INFLACIÓN_PRECIOS_PROVEEDOR_DETECTADA (+4.2%)</p>
+                    <p class="text-cyan">[17:16] CO-PILOTO_IA: RECALIBRANDO_TRAYECTORIA_MARGEN... 100% OK</p>
+                    <p class="text-white/40">[17:16] ACTUALIZACIÓN_CARTA_DIGITAL: PRECIOS_ACTUALIZADOS_AUTOMÁTICO</p>
+                    <p class="text-purple">[17:17] AGENTIC_AI: NEGOCIACIÓN_ORDEN_COMPRA_CAFÉ_EN_CURSO...</p>
+                    <p class="text-white animate-pulse">_ ESPERANDO COMANDO_</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="p-24 border-t border-white/5 text-center mt-40 bg-black/50 relative overflow-hidden">
+        <div class="absolute inset-0 bg-command/5 blur-[120px] pointer-events-none"></div>
+        <div class="flex justify-center gap-16 mb-12 opacity-40">
+            <i data-lucide="navigation-2" class="w-6 h-6"></i>
+            <i data-lucide="shield-check" class="w-6 h-6"></i>
+            <i data-lucide="cpu" class="w-6 h-6"></i>
+            <i data-lucide="activity" class="w-6 h-6"></i>
+        </div>
+        <div class="space-y-6 relative z-10">
+            <p class="text-xs font-mono text-gray-600 tracking-[0.7em] uppercase leading-relaxed">
+                Cosmos Systems Engineering <br/>
+                Deep Command Blue Protocol v2.5 <br/>
+                Argentina // Protocolo 170774_UNIFIED // 2026
+            </p>
+            <p class="text-[9px] text-cyan/30 font-mono tracking-widest uppercase italic">"Neutralizando la gravedad macroeconómica mediante el comando estratégico"</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-content').forEach(view => {
+                view.classList.remove('active');
+            });
+
+            document.getElementById('view-' + viewId).classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-gray-500');
+            });
+            const activeBtn = document.getElementById('btn-' + viewId);
+            activeBtn.classList.add('tab-active');
+            activeBtn.classList.remove('text-gray-500');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
