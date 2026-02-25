@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMOS | Comando de Misión Interestelar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --command-blue: #170774;
+            --cosmos-cyan: #00FFC3;
+            --deep-space: #050510;
+            --stellar-white: #F4F5F8;
+            --plasma-orange: #FF8928;
+            --nebula-purple: #6D28D9;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--stellar-white);
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .text-cyan { color: var(--cosmos-cyan); }
+        .text-orange { color: var(--plasma-orange); }
+        .text-purple { color: var(--nebula-purple); }
+
+        /* --- AMBIENTE CÓSMICO --- */
+        .galaxy-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #0a0a20 0%, #050510 100%);
+        }
+
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle 4s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.1; transform: scale(0.7); }
+            100% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        /* --- NAVEGACIÓN --- */
+        .tab-btn {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: currentColor;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .tab-btn.active::after { width: 100%; }
+        .tab-btn.active { color: white; filter: drop-shadow(0 0 12px currentColor); }
+
+        /* --- CONTENEDORES --- */
+        .mission-view { display: none; }
+        .mission-view.active { display: block; animation: hyperspace 0.9s cubic-bezier(0.2, 0, 0, 1); }
+
+        @keyframes hyperspace {
+            from { opacity: 0; transform: scale(1.05) translateY(30px); filter: blur(15px); }
+            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .asset-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .asset-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- ANIMACIONES --- */
+        .orbit-rotate { animation: rotate 40s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .rocket-glow {
+            filter: blur(20px);
+            background: radial-gradient(circle, #fff 0%, var(--plasma-orange) 60%, transparent 100%);
+            animation: thrust 0.15s infinite alternate;
+        }
+        @keyframes thrust { from { opacity: 0.5; transform: scale(1); } to { opacity: 0.9; transform: scale(1.1); } }
+    </style>
+</head>
+<body>
+
+    <div class="galaxy-canvas" id="galaxy">
+        <div class="nebula bg-purple-900 w-[800px] h-[800px] top-[-20%] left-[-10%]" id="nebula-1"></div>
+        <div class="nebula bg-blue-900 w-[600px] h-[600px] bottom-[5%] right-[-10%]" id="nebula-2"></div>
+    </div>
+
+    <!-- Navegación de Comando -->
+    <nav class="sticky top-0 z-50 px-10 py-6 glass border-b border-white/10 bg-[#050510]/90 flex justify-between items-center">
+        <div class="flex items-center gap-5 group cursor-pointer">
+            <div class="w-14 h-14 bg-[#170774] rounded-2xl flex items-center justify-center border border-cyan/30 shadow-[0_0_20px_rgba(0,255,195,0.2)]">
+                <i data-lucide="navigation" class="text-cyan w-8 h-8 group-hover:rotate-[360deg] transition-transform duration-1000"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-3xl font-black uppercase tracking-tighter italic leading-none">Cosmos</span>
+                <span class="text-[10px] font-mono text-cyan tracking-[0.5em] uppercase">Mission Command</span>
+            </div>
+        </div>
+
+        <div class="flex gap-10 bg-black/50 px-10 py-4 rounded-3xl border border-white/10">
+            <button onclick="switchMission('cuasar')" id="tab-cuasar" class="tab-btn active text-cyan font-bold text-sm uppercase tracking-widest">Cuásar</button>
+            <button onclick="switchMission('propulsion')" id="tab-propulsion" class="tab-btn text-orange font-bold text-sm uppercase tracking-widest">Propulsión</button>
+            <button onclick="switchMission('sistema')" id="tab-sistema" class="tab-btn text-purple font-bold text-sm uppercase tracking-widest">Sistema</button>
+        </div>
+
+        <div class="hidden xl:flex items-center gap-6 font-mono text-[10px]">
+            <div class="flex flex-col items-end">
+                <span class="text-gray-500 uppercase">Estado Operativo</span>
+                <span class="text-cyan">SINC_CENTRAL_AR</span>
+            </div>
+            <div class="w-3 h-3 rounded-full bg-cyan animate-pulse shadow-[0_0_10px_#00FFC3]"></div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-10 lg:p-20 relative">
+
+        <!-- --- DIMENSIÓN 1: CUÁSAR (SOBERANÍA DE DATOS) --- -->
+        <div id="mission-cuasar" class="mission-view active space-y-20">
+            <div class="grid lg:grid-cols-2 gap-24 items-center mb-32">
+                <header class="space-y-10">
+                    <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-cyan/10 border border-cyan/30">
+                        <i data-lucide="eye" class="w-4 h-4 text-cyan"></i>
+                        <span class="text-[11px] font-mono text-cyan uppercase tracking-widest">Pilar: Soberanía de Datos</span>
+                    </div>
+                    <h1 class="text-7xl lg:text-9xl font-black uppercase tracking-tighter italic leading-[0.85]">
+                        La Verdad <br/><span class="text-cyan">Absoluta</span>.
+                    </h1>
+                    <p class="text-2xl text-white/50 leading-relaxed font-light">
+                        En un mercado donde la información es volátil, Cosmos ofrece la verdad absoluta a través de analíticas que <span class="text-white font-bold italic">filtran el ruido</span> y revelan la intención real de los datos operativos.
+                    </p>
+                    <div class="p-8 glass rounded-[2.5rem] border-cyan/20 space-y-4">
+                        <h4 class="text-xs font-bold uppercase tracking-[0.3em] text-cyan">Diccionario de Misión</h4>
+                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                            <span class="text-[10px] text-gray-500 line-through">Reportes</span>
+                            <i data-lucide="arrow-right" class="w-3 h-3 text-cyan"></i>
+                            <span class="text-xs font-black uppercase tracking-widest text-white">Telemetría</span>
+                        </div>
+                        <p class="text-[10px] text-white/40 italic">"Analíticas que decodifican la caída del consumo como entornos de baja gravedad."</p>
+                    </div>
+                </header>
+
+                <!-- Visual Interactivo: El Cuásar -->
+                <div class="relative flex items-center justify-center">
+                    <div class="w-full aspect-square relative flex items-center justify-center">
+                        <div class="absolute inset-0 bg-cyan/10 blur-[150px] rounded-full animate-pulse"></div>
+                        <div class="absolute w-[120%] h-[20%] border-y border-cyan/20 rounded-full orbit-rotate" style="transform: rotateX(70deg);"></div>
+                        <div class="relative z-10 w-56 h-56 bg-command rounded-full border-4 border-cyan flex items-center justify-center shadow-[0_0_100px_rgba(0,255,195,0.4)]">
+                            <i data-lucide="layers" class="text-cyan w-24 h-24"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KIT DE MARCA ESTÁTICO (CUÁSAR) -->
+            <section class="space-y-8">
+                <h2 class="text-xs font-mono text-gray-500 uppercase tracking-[0.5em] text-center mb-12">Logotipo Estático & Assets // Cuásar</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Versión Presentación -->
+                    <div class="asset-card p-10 rounded-[3rem] text-center space-y-6">
+                        <div class="w-32 h-32 mx-auto flex items-center justify-center bg-command rounded-full border-2 border-cyan shadow-xl">
+                            <i data-lucide="layers" class="text-cyan w-16 h-16"></i>
+                        </div>
+                        <span class="text-[9px] font-mono text-cyan uppercase tracking-widest block">Format: SVG / High-Res</span>
+                        <h4 class="font-bold uppercase text-xs">Uso: Presentaciones B2B</h4>
+                    </div>
+                    <!-- Versión Perfil / App -->
+                    <div class="asset-card p-10 rounded-[3rem] text-center space-y-6">
+                        <div class="w-32 h-32 mx-auto flex items-center justify-center bg-cyan rounded-full shadow-2xl">
+                            <i data-lucide="layers" class="text-command w-16 h-16"></i>
+                        </div>
+                        <span class="text-[9px] font-mono text-gray-500 uppercase tracking-widest block">Format: PNG / Optimized</span>
+                        <h4 class="font-bold uppercase text-xs">Uso: Instagram / App Icon</h4>
+                    </div>
+                    <!-- Versión Email / Firma -->
+                    <div class="asset-card p-10 rounded-[3rem] text-center space-y-6">
+                        <div class="w-32 h-32 mx-auto flex items-center justify-center">
+                            <i data-lucide="layers" class="text-white w-16 h-16"></i>
+                        </div>
+                        <span class="text-[9px] font-mono text-gray-500 uppercase tracking-widest block">Format: Inline SVG</span>
+                        <h4 class="font-bold uppercase text-xs">Uso: Mails / Documentación</h4>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- --- DIMENSIÓN 2: PROPULSIÓN (MOTOR DE ASCENSO) --- -->
+        <div id="mission-propulsion" class="mission-view space-y-20">
+            <div class="grid lg:grid-cols-2 gap-24 items-center mb-32">
+                <header class="space-y-10">
+                    <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-orange/10 border border-orange/30">
+                        <i data-lucide="rocket" class="w-4 h-4 text-orange"></i>
+                        <span class="text-[11px] font-mono text-orange uppercase tracking-widest">Pilar: Ingeniería de Grado Industrial</span>
+                    </div>
+                    <h1 class="text-7xl lg:text-9xl font-black uppercase tracking-tighter italic leading-[0.85]">
+                        Fuerza de <br/><span class="text-orange">Ascenso</span>.
+                    </h1>
+                    <p class="text-2xl text-white/50 leading-relaxed font-light">
+                        Cosmos no es "fácil de usar", es <span class="text-white font-bold italic">infalible en su ejecución</span>. Una herramienta construida bajo estándares de alta complejidad para condiciones extremas.
+                    </p>
+                    <div class="p-8 glass rounded-[2.5rem] border-orange/20 space-y-4">
+                        <h4 class="text-xs font-bold uppercase tracking-[0.3em] text-orange">Diccionario de Misión</h4>
+                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                            <span class="text-[10px] text-gray-500 line-through">Rentabilidad</span>
+                            <i data-lucide="arrow-right" class="w-3 h-3 text-orange"></i>
+                            <span class="text-xs font-black uppercase tracking-widest text-white">Velocidad de Escape</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                            <span class="text-[10px] text-gray-500 line-through">Flujo de Caja</span>
+                            <i data-lucide="arrow-right" class="w-3 h-3 text-orange"></i>
+                            <span class="text-xs font-black uppercase tracking-widest text-white">Propulsión</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Visual: Cohete Starship Style -->
+                <div class="relative flex items-center justify-center h-[550px]">
+                    <div class="absolute top-0 right-0 w-32 h-32 float opacity-40">
+                         <div class="glass p-4 rounded-xl border-white/10 flex flex-col items-center">
+                            <i data-lucide="satellite" class="text-orange w-8 h-8 mb-2"></i>
+                            <span class="text-[7px] font-mono text-orange">SINC_DATA_v4</span>
+                         </div>
+                    </div>
+                    <div class="relative">
+                        <div class="relative z-10 w-48 h-96 float" style="animation-duration: 4s;">
+                            <svg viewBox="0 0 100 200" class="w-full h-full filter drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                                <path d="M50 10 L35 45 L65 45 Z" fill="#F4F5F8" />
+                                <rect x="35" y="45" width="30" height="90" fill="#F4F5F8" />
+                                <rect x="48" y="45" width="4" height="90" fill="#D1D5DB" />
+                                <circle cx="50" cy="75" r="7" fill="#170774" stroke="#00FFC3" stroke-width="2" />
+                                <path d="M35 115 L15 150 L35 150 Z" fill="#170774" />
+                                <path d="M65 115 L85 150 L65 150 Z" fill="#170774" />
+                                <path d="M42 150 L58 150 L62 165 L38 165 Z" fill="#374151" />
+                            </svg>
+                            <div class="absolute bottom-5 left-1/2 -translate-x-1/2 w-14 h-36 rocket-glow rounded-full"></div>
+                        </div>
+                        <div class="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-t from-[#170774] to-transparent rounded-full opacity-10 border-t border-white/5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KIT DE MARCA ESTÁTICO (PROPULSIÓN) -->
+            <section class="space-y-8">
+                <h2 class="text-xs font-mono text-gray-500 uppercase tracking-[0.5em] text-center mb-12">Kit de Ingeniería Visual // Propulsión</h2>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <!-- Logotipo Vertical -->
+                    <div class="asset-card p-8 rounded-3xl text-center space-y-4">
+                        <div class="h-40 flex items-center justify-center">
+                            <svg viewBox="0 0 40 80" class="h-32 w-auto">
+                                <path d="M20 5 L14 20 L26 20 Z" fill="#FF8928" />
+                                <rect x="14" y="20" width="12" height="40" fill="#170774" />
+                                <path d="M14 50 L8 65 L14 65 Z" fill="#FF8928" />
+                                <path d="M26 50 L32 65 L26 65 Z" fill="#FF8928" />
+                            </svg>
+                        </div>
+                        <h4 class="font-black uppercase text-[10px] text-orange">Vertical_Logo</h4>
+                    </div>
+                    <!-- Isotipo Circular -->
+                    <div class="asset-card p-8 rounded-3xl text-center space-y-4">
+                        <div class="h-40 flex items-center justify-center">
+                            <div class="w-24 h-24 bg-command rounded-full border-2 border-orange flex items-center justify-center">
+                                <i data-lucide="rocket" class="text-orange w-12 h-12"></i>
+                            </div>
+                        </div>
+                        <h4 class="font-black uppercase text-[10px] text-orange">Circle_Isotype</h4>
+                    </div>
+                    <!-- Variación Naranja -->
+                    <div class="asset-card p-8 rounded-3xl text-center space-y-4">
+                        <div class="h-40 flex items-center justify-center bg-orange rounded-2xl">
+                             <i data-lucide="rocket" class="text-command w-16 h-16"></i>
+                        </div>
+                        <h4 class="font-black uppercase text-[10px] text-command">Brand_Highlight</h4>
+                    </div>
+                    <!-- Iconografía Técnica -->
+                    <div class="asset-card p-8 rounded-3xl text-center space-y-4">
+                        <div class="h-40 flex items-center justify-center gap-4">
+                            <i data-lucide="flame" class="text-orange w-8 h-8"></i>
+                            <i data-lucide="gauge" class="text-orange w-8 h-8"></i>
+                            <i data-lucide="wind" class="text-orange w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-black uppercase text-[10px] text-orange">Technical_Icons</h4>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- --- DIMENSIÓN 3: SISTEMA (RESILIENCIA ALGORÍTMICA) --- -->
+        <div id="mission-sistema" class="mission-view space-y-20">
+            <div class="grid lg:grid-cols-2 gap-24 items-center mb-32">
+                <header class="space-y-10">
+                    <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-purple/10 border border-purple/30">
+                        <i data-lucide="cpu" class="w-4 h-4 text-purple"></i>
+                        <span class="text-[11px] font-mono text-purple uppercase tracking-widest">Pilar: Resiliencia Algorítmica</span>
+                    </div>
+                    <h1 class="text-7xl lg:text-9xl font-black uppercase tracking-tighter italic leading-[0.85]">
+                        Red de <br/><span class="text-purple">Control</span>.
+                    </h1>
+                    <p class="text-2xl text-white/50 leading-relaxed font-light">
+                        Diseñados para operar en <span class="text-white font-bold italic">condiciones extremas</span>. Validamos la eficacia del sistema como si fueran entornos de alta presión o baja gravedad.
+                    </p>
+                    <div class="flex items-center gap-6 text-purple font-mono text-xs tracking-[0.2em] animate-pulse">
+                        <i data-lucide="activity"></i>
+                        <span>ANALIZANDO_CONSTELACIÓN_FINANCIERA_</span>
+                    </div>
+                </header>
+
+                <!-- Visual: La Galaxia Neural -->
+                <div class="relative flex items-center justify-center">
+                    <div class="w-full aspect-square relative flex items-center justify-center">
+                        <div class="absolute inset-0 bg-purple-600/10 blur-[150px] rounded-full"></div>
+                        <div class="absolute w-80 h-80 border border-purple-500/20 rounded-full orbit-rotate"></div>
+                        <div class="absolute w-[400px] h-[400px] border border-white/5 rounded-full orbit-rotate" style="animation-direction: reverse; animation-duration: 60s;"></div>
+                        
+                        <svg viewBox="0 0 200 200" class="absolute inset-0 w-full h-full pointer-events-none">
+                            <circle cx="50" cy="50" r="4" fill="var(--nebula-purple)" class="animate-pulse" />
+                            <circle cx="150" cy="60" r="3" fill="var(--cosmos-cyan)" />
+                            <circle cx="100" cy="150" r="5" fill="var(--nebula-purple)" />
+                            <line x1="50" y1="50" x2="100" y2="100" stroke="white" stroke-width="0.2" opacity="0.2" />
+                            <line x1="150" y1="60" x2="100" y2="100" stroke="white" stroke-width="0.2" opacity="0.2" />
+                            <line x1="100" y1="150" x2="100" y2="100" stroke="white" stroke-width="0.2" opacity="0.2" />
+                        </svg>
+                        <i data-lucide="binary" class="text-purple-400 w-20 h-20 absolute animate-pulse"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KIT DE MARCA ESTÁTICO (SISTEMA) -->
+            <section class="space-y-8">
+                <h2 class="text-xs font-mono text-gray-500 uppercase tracking-[0.5em] text-center mb-12">Activos de Inteligencia // Sistema</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="asset-card p-12 rounded-[3rem] space-y-8">
+                        <div class="flex justify-between items-center">
+                             <i data-lucide="binary" class="text-purple w-12 h-12"></i>
+                             <span class="text-[9px] font-mono text-gray-500">Asset_Code: SYS_LOGO</span>
+                        </div>
+                        <h3 class="text-2xl font-black uppercase italic tracking-tighter">Variación Monocromo</h3>
+                        <p class="text-sm text-white/40">Ideal para fondos complejos o fotografías de locales con alta densidad visual.</p>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 border border-white/20 flex items-center justify-center rounded-lg text-white font-black italic">C</div>
+                            <div class="w-12 h-12 border border-white/20 flex items-center justify-center rounded-lg text-white font-black italic">O</div>
+                            <div class="w-12 h-12 border border-white/20 flex items-center justify-center rounded-lg text-white font-black italic">S</div>
+                        </div>
+                    </div>
+                    <div class="asset-card p-12 rounded-[3rem] space-y-8 bg-purple-900/10">
+                        <div class="flex justify-between items-center">
+                             <i data-lucide="database" class="text-purple w-12 h-12"></i>
+                             <span class="text-[9px] font-mono text-gray-500">Asset_Code: NEURAL_ICON</span>
+                        </div>
+                        <h3 class="text-2xl font-black uppercase italic tracking-tighter">Favicon / Badge</h3>
+                        <p class="text-sm text-white/40">Optimizado para legibilidad en tamaños mínimos (16px a 64px).</p>
+                        <div class="w-16 h-16 bg-command rounded-xl border-2 border-purple-500 flex items-center justify-center shadow-lg">
+                            <i data-lucide="binary" class="text-purple w-8 h-8"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="p-24 border-t border-white/5 text-center mt-40 bg-black/40 relative overflow-hidden">
+        <div class="absolute inset-0 bg-command/10 blur-[120px] pointer-events-none"></div>
+        <div class="space-y-8 relative z-10">
+            <div class="flex justify-center gap-12 mb-10 opacity-30">
+                <i data-lucide="orbit" class="w-6 h-6"></i>
+                <i data-lucide="satellite-dish" class="w-6 h-6"></i>
+                <i data-lucide="telescope" class="w-6 h-6"></i>
+            </div>
+            <p class="text-[11px] font-mono text-gray-600 tracking-[0.7em] uppercase leading-relaxed">
+                Cosmos Systems Engineering <br/>
+                Deep Space Branding Protocol v4.5 <br/>
+                Argentina // 2026
+            </p>
+            <p class="text-[9px] text-cyan/30 font-mono tracking-widest uppercase italic">"Engineering Sovereignty in High Volatility Markets"</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Generador de Estrellas Realista
+        const galaxy = document.getElementById('galaxy');
+        const starCount = 400;
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2.2;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 8}s`;
+            galaxy.appendChild(star);
+        }
+
+        function switchMission(missionId) {
+            const n1 = document.getElementById('nebula-1');
+            const n2 = document.getElementById('nebula-2');
+            
+            // Animación de color de nebulosa
+            const colors = {
+                cuasar: { c1: 'rgba(0, 255, 195, 0.1)', c2: 'rgba(23, 7, 116, 0.2)' },
+                propulsion: { c1: 'rgba(255, 137, 40, 0.08)', c2: 'rgba(23, 7, 116, 0.2)' },
+                sistema: { c1: 'rgba(109, 40, 217, 0.12)', c2: 'rgba(0, 255, 195, 0.04)' }
+            };
+
+            n1.style.backgroundColor = colors[missionId].c1;
+            n2.style.backgroundColor = colors[missionId].c2;
+
+            document.querySelectorAll('.mission-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById('mission-' + missionId).classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('tab-' + missionId).classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
