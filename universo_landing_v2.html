@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMOS | Comando de Misión Interestelar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --command-blue: #170774;
+            --cosmos-cyan: #00FFC3;
+            --deep-space: #050510;
+            --stellar-white: #F4F5F8;
+            --plasma-orange: #FF8928;
+            --nebula-purple: #6D28D9;
+        }
+
+        body {
+            background-color: var(--deep-space);
+            color: var(--stellar-white);
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .text-cyan { color: var(--cosmos-cyan); }
+        .text-orange { color: var(--plasma-orange); }
+        .text-purple { color: var(--nebula-purple); }
+
+        /* --- AMBIENTE CÓSMICO DINÁMICO --- */
+        .galaxy-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #0a0a20 0%, #050510 100%);
+        }
+
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        /* --- NAVEGACIÓN DE PESTAÑAS --- */
+        .tab-btn {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: currentColor;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .tab-btn.active::after { width: 80%; }
+        .tab-btn.active { color: white; filter: drop-shadow(0 0 8px currentColor); }
+
+        /* --- CONTENEDORES DE MISIÓN --- */
+        .mission-view { display: none; }
+        .mission-view.active { display: block; animation: hyperspace 0.8s cubic-bezier(0.2, 0, 0, 1); }
+
+        @keyframes hyperspace {
+            from { opacity: 0; transform: scale(1.1) translateY(20px); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        .glass {
+            background: rgba(23, 7, 116, 0.05);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        /* --- ANIMACIONES DE OBJETOS --- */
+        .orbit-rotate { animation: rotate 20s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .rocket-shake { animation: shake 0.2s ease-in-out infinite alternate; }
+        @keyframes shake { from { transform: translate(1px, 1px); } to { transform: translate(-1px, -1px); } }
+
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cosmos-cyan), transparent);
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan { from { top: 0%; } to { top: 100%; } }
+    </style>
+</head>
+<body>
+
+    <div class="galaxy-canvas" id="galaxy">
+        <!-- Nebulosas Generadas -->
+        <div class="nebula bg-purple-900 w-[600px] h-[600px] top-[-10%] left-[-10%]"></div>
+        <div class="nebula bg-blue-900 w-[500px] h-[500px] bottom-[10%] right-[-5%]"></div>
+        <div class="nebula bg-[#170774] w-[700px] h-[700px] top-[40%] left-[30%] opacity-10"></div>
+    </div>
+
+    <!-- Navegación de Comando Central -->
+    <nav class="sticky top-0 z-50 px-10 py-6 glass border-b border-white/10 bg-[#050510]/80 flex justify-between items-center">
+        <div class="flex items-center gap-4 group cursor-pointer">
+            <div class="w-12 h-12 bg-[#170774] rounded-xl flex items-center justify-center border border-cyan/30 shadow-[0_0_15px_rgba(0,255,195,0.3)]">
+                <i data-lucide="navigation" class="text-cyan w-6 h-6 group-hover:rotate-45 transition-transform duration-500"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-2xl font-black uppercase tracking-tighter italic leading-none">Cosmos</span>
+                <span class="text-[9px] font-mono text-cyan tracking-[0.4em] uppercase">Control de Misión</span>
+            </div>
+        </div>
+
+        <div class="flex gap-8 bg-black/40 px-8 py-3 rounded-2xl border border-white/5">
+            <button onclick="switchMission('cuasar')" id="tab-cuasar" class="tab-btn active text-cyan font-bold text-xs uppercase tracking-widest">Cuásar</button>
+            <button onclick="switchMission('propulsion')" id="tab-propulsion" class="tab-btn text-orange font-bold text-xs uppercase tracking-widest">Propulsión</button>
+            <button onclick="switchMission('sistema')" id="tab-sistema" class="tab-btn text-purple font-bold text-xs uppercase tracking-widest">Sistema</button>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-4 font-mono text-[9px] text-gray-500">
+            <span>SINC_LAT: 4.2ms</span>
+            <div class="w-2 h-2 rounded-full bg-cyan animate-pulse"></div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-10 lg:p-20 relative">
+
+        <!-- --- VISTA 1: CUÁSAR (SOBERANÍA DE DATOS) --- -->
+        <div id="mission-cuasar" class="mission-view active space-y-16">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <header class="space-y-8">
+                    <div class="inline-flex items-center gap-3 px-4 py-1 rounded-full bg-cyan/10 border border-cyan/20">
+                        <i data-lucide="database" class="w-3 h-3 text-cyan"></i>
+                        <span class="text-[10px] font-mono text-cyan uppercase tracking-widest">Protocolo: Soberanía de Datos</span>
+                    </div>
+                    <h1 class="text-7xl lg:text-8xl font-black uppercase tracking-tighter italic leading-tight">
+                        El Núcleo de <br/><span class="text-cyan">Verdad</span>.
+                    </h1>
+                    <p class="text-xl text-white/50 leading-relaxed max-w-xl">
+                        En el caos de la inflación, el **Cuásar** es la fuente de luz definitiva. Filtra el ruido del mercado para revelar la <span class="text-white font-bold italic">telemetría real</span> de tu rentabilidad.
+                    </p>
+                    <div class="flex gap-6">
+                        <div class="glass p-6 rounded-2xl border-cyan/20">
+                            <i data-lucide="eye" class="text-cyan mb-2"></i>
+                            <h4 class="text-xs font-bold uppercase">Visibilidad 100%</h4>
+                        </div>
+                        <div class="glass p-6 rounded-2xl border-cyan/20">
+                            <i data-lucide="filter" class="text-cyan mb-2"></i>
+                            <h4 class="text-xs font-bold uppercase">Ruido Cero</h4>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="relative flex items-center justify-center">
+                    <!-- Elemento Visual: El Cuásar Central -->
+                    <div class="relative w-80 h-80 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-cyan/20 blur-[100px] animate-pulse rounded-full"></div>
+                        <!-- Órbitas de Datos -->
+                        <div class="absolute w-full h-full border border-cyan/10 rounded-full orbit-rotate"></div>
+                        <div class="absolute w-3/4 h-3/4 border border-cyan/20 rounded-full orbit-rotate" style="animation-direction: reverse;"></div>
+                        <!-- Núcleo de Energía -->
+                        <div class="relative z-10 w-32 h-32 bg-[#170774] border-2 border-cyan rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(0,255,195,0.4)]">
+                            <i data-lucide="zap" class="text-cyan w-12 h-12 animate-pulse"></i>
+                        </div>
+                        <!-- Satélites de Información -->
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 float">
+                            <div class="glass p-2 rounded-lg border-cyan/30 text-[8px] font-mono text-cyan">PRICE_INDEX_v2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass p-10 rounded-[3rem] border-cyan/10 space-y-4">
+                    <h3 class="text-xl font-black uppercase tracking-tight text-cyan italic">Filtrado de Ruido</h3>
+                    <p class="text-xs text-white/40 leading-relaxed">Algoritmos que neutralizan las distorsiones de los precios de reposición diarios, entregando datos limpios para la toma de decisiones.</p>
+                </div>
+                <div class="glass p-10 rounded-[3rem] border-cyan/10 space-y-4">
+                    <h3 class="text-xl font-black uppercase tracking-tight text-cyan italic">Foco Lumínico</h3>
+                    <p class="text-xs text-white/40 leading-relaxed">Iluminamos los "agujeros negros" financieros donde se pierde tu rentabilidad invisible.</p>
+                </div>
+                <div class="glass p-10 rounded-[3rem] border-cyan/10 space-y-4">
+                    <h3 class="text-xl font-black uppercase tracking-tight text-cyan italic">Sincronía Estelar</h3>
+                    <p class="text-xs text-white/40 leading-relaxed">Actualización milimétrica con el mercado argentino. Tu carta digital siempre en órbita con tus costos.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- VISTA 2: PROPULSIÓN (VELOCIDAD DE ESCAPE) --- -->
+        <div id="mission-propulsion" class="mission-view space-y-16">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <header class="space-y-8">
+                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-orange/10 border border-orange/30">
+                        <i data-lucide="flame" class="w-3 h-3 text-orange"></i>
+                        <span class="text-[10px] font-mono text-orange uppercase tracking-widest">Protocolo: Velocidad de Escape</span>
+                    </div>
+                    <h1 class="text-7xl lg:text-8xl font-black uppercase tracking-tighter italic leading-tight">
+                        Motores de <br/><span class="text-orange">Ascenso</span>.
+                    </h1>
+                    <p class="text-xl text-white/60 leading-relaxed max-w-xl">
+                        La inflación es la gravedad. Cosmos es el **Motor de Plasma** que genera la potencia necesaria para que tu negocio despegue y mantenga su trayectoria de crecimiento.
+                    </p>
+                    <div class="flex gap-4">
+                        <button class="px-8 py-4 bg-orange text-black font-black uppercase text-xs tracking-[0.3em] rounded-2xl hover:scale-105 transition-transform">Iniciar Despegue</button>
+                    </div>
+                </header>
+
+                <div class="relative flex items-center justify-center p-10">
+                    <!-- Elemento Visual: El Cohete y Planeta -->
+                    <div class="relative">
+                        <!-- Planeta al fondo -->
+                        <div class="w-64 h-64 bg-gradient-to-br from-[#170774] to-[#050510] rounded-full border border-white/5 shadow-2xl relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                            <div class="absolute top-1/4 left-1/4 w-32 h-1 bg-white/5 rotate-45"></div>
+                        </div>
+                        <!-- Cohete Lanzando -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center rocket-shake">
+                            <div class="relative -translate-y-16">
+                                <i data-lucide="rocket" class="text-white w-24 h-24 drop-shadow-[0_0_20px_rgba(255,137,40,0.5)]"></i>
+                                <!-- Llamas del Motor -->
+                                <div class="absolute -bottom-12 left-1/2 -translate-x-1/2 w-8 bg-gradient-to-t from-transparent via-orange-500 to-yellow-300 rounded-full blur-md h-20 animate-pulse"></div>
+                            </div>
+                        </div>
+                        <!-- Estelas de Propulsión -->
+                        <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 space-y-2 opacity-30">
+                            <div class="w-1 h-20 bg-orange/40 rounded-full mx-auto"></div>
+                            <div class="w-1 h-40 bg-orange/20 rounded-full mx-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass p-8 rounded-3xl border-orange/10">
+                    <span class="text-[9px] font-mono text-orange uppercase tracking-widest block mb-4">Empuje de Caja</span>
+                    <h4 class="text-2xl font-black italic">Propulsión</h4>
+                    <p class="text-[10px] text-gray-500 uppercase mt-2">Cash flow optimizado para evitar la fricción financiera.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border-orange/10">
+                    <span class="text-[9px] font-mono text-orange uppercase tracking-widest block mb-4">Ascenso Neto</span>
+                    <h4 class="text-2xl font-black italic">Órbita</h4>
+                    <p class="text-[10px] text-gray-500 uppercase mt-2">Crecimiento calculado basado en márgenes reales.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border-orange/10">
+                    <span class="text-[9px] font-mono text-orange uppercase tracking-widest block mb-4">Maniobras</span>
+                    <h4 class="text-2xl font-black italic">Control</h4>
+                    <p class="text-[10px] text-gray-500 uppercase mt-2">Ajustes dinámicos de trayectoria ante cambios de mercado.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border-orange/10">
+                    <span class="text-[9px] font-mono text-orange uppercase tracking-widest block mb-4">Combustible</span>
+                    <h4 class="text-2xl font-black italic">Stock</h4>
+                    <p class="text-[10px] text-gray-500 uppercase mt-2">Gestión de insumos sin capital inmovilizado.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- VISTA 3: SISTEMA (INTELIGENCIA AGENTIC) --- -->
+        <div id="mission-sistema" class="mission-view space-y-16">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <header class="space-y-8">
+                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-purple/10 border border-purple/30">
+                        <i data-lucide="cpu" class="w-3 h-3 text-purple"></i>
+                        <span class="text-[10px] font-mono text-purple uppercase tracking-widest">Protocolo: Inteligencia Agentic</span>
+                    </div>
+                    <h1 class="text-7xl lg:text-8xl font-black uppercase tracking-tighter italic leading-tight">
+                        La Red <br/><span class="text-purple">Neural</span>.
+                    </h1>
+                    <p class="text-xl text-white/50 leading-relaxed max-w-xl">
+                        Un **Cosmos** de conexiones. El sistema no solo registra; piensa. Identifica anomalías y coordina satélites de información para que tu comando sea infalible.
+                    </p>
+                    <div class="flex items-center gap-4 text-purple">
+                        <i data-lucide="activity" class="animate-pulse"></i>
+                        <span class="font-mono text-xs uppercase tracking-widest">Analizando Red de Constelaciones...</span>
+                    </div>
+                </header>
+
+                <div class="relative flex items-center justify-center">
+                    <!-- Elemento Visual: La Galaxia Neural -->
+                    <div class="w-96 h-96 relative">
+                        <div class="absolute inset-0 bg-purple-500/10 blur-[120px] rounded-full"></div>
+                        <!-- Centro Galáctico -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-40 h-40 border border-purple-500/30 rounded-full animate-spin-slow"></div>
+                            <i data-lucide="binary" class="text-purple-400 w-16 h-16 absolute"></i>
+                        </div>
+                        <!-- Satélites Orbitando -->
+                        <div class="absolute inset-0 orbit-rotate">
+                            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-purple-500 rounded-full shadow-[0_0_15px_rgba(109,40,217,0.8)]"></div>
+                        </div>
+                        <div class="absolute inset-0 orbit-rotate" style="animation-duration: 12s; animation-direction: reverse;">
+                            <div class="absolute bottom-10 right-20 w-3 h-3 bg-cyan rounded-full shadow-[0_0_15px_rgba(0,255,195,0.8)]"></div>
+                        </div>
+                        <!-- Constelación de Nodos -->
+                        <svg viewBox="0 0 100 100" class="absolute inset-0 w-full h-full opacity-30 stroke-purple-400 fill-none" stroke-width="0.5">
+                            <circle cx="20" cy="20" r="1" />
+                            <circle cx="80" cy="30" r="1" />
+                            <circle cx="30" cy="80" r="1" />
+                            <circle cx="70" cy="70" r="1" />
+                            <line x1="20" y1="20" x2="50" y2="50" />
+                            <line x1="80" y1="30" x2="50" y2="50" />
+                            <line x1="30" y1="80" x2="50" y2="50" />
+                            <line x1="70" y1="70" x2="50" y2="50" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-black/40 border border-white/10 rounded-[4rem] p-16 relative overflow-hidden">
+                <div class="scan-line"></div>
+                <div class="grid md:grid-cols-2 gap-12 relative z-10">
+                    <div class="space-y-6">
+                        <h4 class="text-xs font-mono text-purple uppercase tracking-[0.3em]">Cerebro Operativo</h4>
+                        <p class="text-2xl font-black italic">Resiliencia Algorítmica</p>
+                        <p class="text-sm text-white/50">Tu sistema está diseñado para operar en "condiciones extremas". Validamos cada movimiento contra la caída del consumo y la presión de costos.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <h4 class="text-xs font-mono text-purple uppercase tracking-[0.3em]">Red de Misión</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center glass p-4 rounded-xl border-purple-500/20">
+                                <span class="text-[10px] uppercase font-bold">IA_NEGOTIATOR</span>
+                                <span class="text-cyan text-[10px] font-mono">ACTIVE</span>
+                            </div>
+                            <div class="flex justify-between items-center glass p-4 rounded-xl border-purple-500/20">
+                                <span class="text-[10px] uppercase font-bold">MENU_ENGINEER</span>
+                                <span class="text-cyan text-[10px] font-mono">OPTIMIZING</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="p-20 border-t border-white/5 text-center mt-32 bg-black/40 relative overflow-hidden">
+        <div class="absolute inset-0 bg-command/10 blur-[100px] pointer-events-none"></div>
+        <div class="space-y-6 relative z-10">
+            <div class="flex justify-center gap-10 mb-8 opacity-20">
+                <i data-lucide="satellite" class="w-5 h-5"></i>
+                <i data-lucide="milky-way" class="w-5 h-5"></i>
+                <i data-lucide="telescope" class="w-5 h-5"></i>
+            </div>
+            <p class="text-[10px] font-mono text-gray-600 tracking-[0.6em] uppercase leading-relaxed">
+                Cosmos Systems Engineering <br/>
+                Comando Interestelar v3.0 <br/>
+                Buenos Aires, Argentina // 2026
+            </p>
+            <p class="text-[8px] text-cyan/30 font-mono tracking-widest uppercase italic">"Llevando la rentabilidad más allá de la última frontera"</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Generador de Estrellas
+        const galaxy = document.getElementById('galaxy');
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            galaxy.appendChild(star);
+        }
+
+        function switchMission(missionId) {
+            // Ocultar todas
+            document.querySelectorAll('.mission-view').forEach(view => {
+                view.classList.remove('active');
+            });
+
+            // Mostrar activa
+            const activeMission = document.getElementById('mission-' + missionId);
+            activeMission.classList.add('active');
+
+            // Actualizar pestañas
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('tab-' + missionId).classList.add('active');
+
+            // Scroll suave arriba del contenedor
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Re-disparar animaciones si fuera necesario
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
